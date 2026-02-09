@@ -1,0 +1,57 @@
+name: Daily Lottery Data Update
+
+on:
+  schedule:
+    # 每天台北時間早上 9:00 執行 (UTC+8 -> UTC 01:00)
+    - cron: '0 1 * * *'
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install requests
+
+      - name: Run data scraper
+        run: python scripts/update_data.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet src/data/draws.js || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/data/draws.js
+          git commit -m "自動更新: 彩券開獎資料 $(date +'%Y-%m-%d')"
+          git push
+
+      - name: Deploy to GitHub Pages
+        if: steps.check_changes.outputs.changes == 'true'
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

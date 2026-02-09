@@ -1,0 +1,1160 @@
+
+
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>憭扳����������������亥岷</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="keywords" content="璅����,憭扳�����,憡����敶�,隞�敶�539,��剖��敶�,憭抒��敶�,34���敶�,�����脩��,銝�銋�敶�,敶拙��,������鞈�閮�,��啁��敶拙��,璅�������������蝣�,憭扳��������������蝣�,憡����敶拚��������蝣�,隞�敶�539���������蝣�,��剖��敶拚��������蝣�,憭抒��敶拚��������蝣�,34���敶拚��������蝣�"/>
+        <meta name="description" content="���靘�隞�敶�539���憭扳��������憡����敶押����剖��敶押�����韐�敶拐誑���3���敶押��4���敶拍�������圈��������蝣潦��瘥����璅���������������賢�單��Live��湔�剝��������蝔�嚗�銝阡�冽����湔�啣�����璅������豢��蝯梯��������靘�敶抵蕙瘞���暹��瘜典��������" />
+        <link rel="SHORTCUT ICON" href="https://www.pilio.idv.tw/lto.ico"/>
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css?v=20250930" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+
+    <style type="text/css">
+       body {
+            word-break: break-all;
+        }
+
+/* 皛�獢踹��蝵桐葉���RWD */
+.table-toolbar {
+  width: 98%;
+  max-width: 960px;
+  margin: 8px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 3.5vmin;
+  color: #333;
+  box-sizing: border-box;
+}
+.table-toolbar input[type="range"] {
+  width: 70%;
+}
+
+
+.dynamic-table {
+  --font-offset: 0vmin; /* 漎�儭� ��舐�� JS 隤踵�渡����典�����蝘駁�� */
+
+  width: 100%;
+  margin: 16px auto;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+
+.dynamic-table th {
+  background-color: #B02D00;
+  color: white;
+  font-weight: bold;
+  padding: 6px;
+  font-size: calc(5vmin + var(--font-offset)); 
+}
+
+.dynamic-table td {
+  font-weight: bold;
+  color: #000;
+  border-bottom: dotted 1px #ccc;
+  padding: 6px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+.dynamic-table .date-cell {
+  font-size: calc(4vmin + var(--font-offset));
+}
+
+.dynamic-table .number-cell {
+  font-size: calc(6vmin + var(--font-offset));
+}
+
+.dynamic-table .bonus-cell {
+  font-size: calc(5vmin + var(--font-offset));
+}
+
+    </style>
+
+
+<SCRIPT type="text/javascript">
+<!-- hide script from old browser
+
+    var isover
+    var intervalsd
+
+    var DifferenceHour = -1
+    var DifferenceMinute = -1
+    var DifferenceSecond = -1
+
+
+    var Tday = new Date("2026/2/10 20:46:00 GMT+0800")
+
+
+    var daysms = 24 * 60 * 60 * 1000
+    var hoursms = 60 * 60 * 1000
+    var Secondms = 60 * 1000
+    var microsecond = 1000
+
+    function clock() {
+        var time = new Date()
+        var hour = time.getHours()
+        var minute = time.getMinutes()
+        var second = time.getSeconds()
+        var timevalue = "" + ((hour > 12) ? hour - 12 : hour)
+        timevalue += ((minute < 10) ? ":0" : ":") + minute
+        timevalue += ((second < 10) ? ":0" : ":") + second
+        timevalue += ((hour > 12) ? " PM" : " AM")
+        //  document.formnow.now.value = timevalue
+        var convertHour = DifferenceHour
+        var convertMinute = DifferenceMinute
+        var convertSecond = DifferenceSecond
+        var Diffms = Tday.getTime() - time.getTime()
+        DifferenceHour = Math.floor(Diffms / daysms)
+        Diffms -= DifferenceHour * daysms
+        DifferenceMinute = Math.floor(Diffms / hoursms)
+        Diffms -= DifferenceMinute * hoursms
+        DifferenceSecond = Math.floor(Diffms / Secondms)
+        Diffms -= DifferenceSecond * Secondms
+        var dSecs = Math.floor(Diffms / microsecond)
+
+        //if (convertHour != DifferenceHour) document.formnow.dd.value = DifferenceHour
+        //if (convertMinute != DifferenceMinute) document.formnow.hh.value = DifferenceMinute
+        //if (convertSecond != DifferenceSecond) document.formnow.mm.value = DifferenceSecond
+        //document.formnow.ss.value = dSecs
+
+        if (DifferenceHour < 0) {
+            countdown.innerHTML = "甇���函�湔�剝�����銝�...蟡���其葉憭抒�� ^_^ (��詨�������芸����箇��,��⊿����瑟��)"
+            DrawLive.style.display = 'block';
+
+            if (isover != "y") {
+                runDrawLive()
+                intervalsd = setInterval(function () { runDrawLive() }, 6000)
+                isover = "y"
+
+            }
+
+
+
+        } else {
+            countdown.innerHTML = DifferenceHour + " 憭� " + DifferenceMinute + " ��� " + DifferenceSecond + " ��� " + dSecs + " 蝘�"
+            DrawLive.style.display = 'none'
+
+        }
+
+        setTimeout("clock()", 1000)
+    }
+
+
+    function runDrawLive() {
+        //alert('pp')
+        isover = "y"
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                DrawLiveStr.innerHTML = xhttp.responseText;
+
+                if (xhttp.responseText.indexOf('?') != -1) {
+
+                } else {
+                    clearInterval(intervalsd);
+
+                }
+
+
+            }
+        };
+
+        
+                xhttp.open("GET", "https://www.pilio.idv.tw/Live/DrawLiveRead.asp?ltotype=ltobig", true);
+
+        
+
+        xhttp.send();
+
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        clock();
+    });
+
+    // end hiding  -->
+
+    function addltotable() {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+                var text=xhttp.responseText;
+                obj = JSON.parse(text);
+                for(var i = 0; i < obj.lotto.length; i++) {
+
+                    var table = document.getElementById("ltotable");
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+
+                    bgcolor=""
+                    if (i % 2 == 0) {
+                    } else {
+                        bgcolor="background-color: #FFDBCE;"
+                    }
+
+                    cell1.className = "date-cell";
+                    cell2.className = "number-cell";
+                    cell3.className = "bonus-cell";
+
+
+                    cell1.style="font-weight: bold; color: #000000;border-bottom-style: dotted; border-bottom-color: #CCCCCC;text-align:center;padding:0px;vertical-align:middle;"+bgcolor;
+                    cell2.style="font-weight: bold; color: #000000;border-bottom-style: dotted; border-bottom-color: #CCCCCC;text-align:center;padding:0px;vertical-align:middle;"+bgcolor;
+                    cell3.style="font-weight: bold; color: #000000;border-bottom-style: dotted; border-bottom-color: #CCCCCC;text-align:center;padding:0px;vertical-align:middle;"+bgcolor;
+                    cell1.innerHTML = obj.lotto[i].date;
+                    cell2.innerHTML = obj.lotto[i].num;
+                    cell3.innerHTML = obj.lotto[i].sp;
+                    document.getElementById("lastindex").value = obj.lotto[i].dex;
+                }
+            }
+        };
+
+        var url="https://www.pilio.idv.tw/Json_ltonew.asp?";
+        url=url + "Lkind=ltobig";
+        url=url + "&Lindex="+ document.getElementById("lastindex").value;
+        url=url + "&Ldesc="+ document.getElementById("desc").value;;
+        xhttp.open("POST", url , true);
+        xhttp.send();
+
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const slider = document.getElementById('fontOffset');
+      const out    = document.getElementById('fontOffsetVal');
+      const tables = document.querySelectorAll('.dynamic-table'); 
+        if (!slider || tables.length === 0) return;
+
+      
+      const saved = localStorage.getItem('font_offset_vmin_ltobig');
+      const currentValue = saved ? parseFloat(saved).toFixed(1) : '0';
+
+        
+        tables.forEach(table => {
+            table.style.setProperty('--font-offset', currentValue + 'vmin');
+    });
+
+    slider.value = currentValue;
+    //out.textContent = (currentValue >= 0 ? '+' : '') + currentValue;
+
+    
+    slider.addEventListener('input', function () {
+      const v = parseFloat(slider.value).toFixed(1);
+        tables.forEach(table => {
+            table.style.setProperty('--font-offset', v + 'vmin');
+    });
+    //out.textContent = (v >= 0 ? '+' : '') + v;
+    localStorage.setItem('font_offset_vmin_ltobig', v);
+    });
+    });
+
+
+</script>
+
+
+<script type="text/javascript">
+    window.AviviD = window.AviviD || {settings:{},status:{}}; AviviD.web_id = "pilioidv"; AviviD.category_id = "20250304000002"; AviviD.tracking_platform = 'likr'; (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl+'&timestamp='+new Date().getTime();f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-W9F4QDN'); (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl+'&timestamp='+new Date().getTime();f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-MKB8VFG');
+</script>
+
+
+	</head>
+	<body style="text-align:center">
+
+            <table style="margin: 0 auto;width:100%" >
+                <tr>
+                    <td style="text-align:right;vertical-align:top;width:25%;padding:0px">
+                        <a href="https://www.pilio.idv.tw/"><img src="PilioLogo88.png" style="width:66px"/></a>
+                    </td>
+                    <td style="text-align:left;vertical-align:middle;padding:0px">
+                       <span class="title" style="vertical-align:middle;font-size:5vmin;color:#930000">憭扳����������������亥岷</span>
+                        <br>
+                        <span class="title" style="font-size:4vmin;color:#930000">��剖蔗������蝝舐��:1������</span>
+                        <br>
+                        <span class="title" style="font-size:4vmin;color:#930000">��������湔�剖�����:</span>
+                        <span id="countdown" class="title" style="font-size:4vmin;color:#930000">? 憭� ? ��� ? ��� ? 蝘�<BR>��交�������貉����湔�圈����渡雯���</span>
+                        <br>
+                        <a target="_blank" href="https://www.pilio.idv.tw/ltobig/ltobig_lastest_result.asp"><span class="title" style="font-size:4vmin;color:#930000">��������啣之璅����������瘣曉蔗蝯����</span></a>
+                        <br>
+                        <a target="_blank" href="https://www.pilio.idv.tw/ltobig/sqlaibrief.asp"><span class="title" style="font-size:4vmin;color:#930000">���憭扳�����AI敹怠��</span></a>_<a target="_blank" href="https://www.pilio.idv.tw/ltobig/sql28.asp"><span class="title" style="font-size:4vmin;color:#930000">���������頞典�Ｗ��</span></a>
+
+                    </td>
+                </tr>
+            </table>
+
+
+            <a href="https://www.pilio.idv.tw/ltobig/listspecial.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:88%;background-color:#FFD6D8">憭扳�������亦�����蝣�</a>
+
+        <p style="font-size:4vmin;margin-bottom:5px">���韐���拙�����蝯����</p>
+
+
+
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/21787810958,81505757/pilio.idv.tw_mb_320x100', [320, 100], 'div-gpt-ad-1620799135715-0').addService(googletag.pubads());
+    googletag.pubads().collapseEmptyDivs();
+    googletag.enableServices();
+  });
+</script>
+<!-- /21787810958,81505757/pilio.idv.tw_mb_320x100 -->
+<div id='div-gpt-ad-1620799135715-0' style='width: 320px; height: 100px;'>
+  <script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1620799135715-0'); });
+  </script>
+</div>
+
+
+
+
+
+
+
+<br>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="inner">
+
+							<!-- Logo -->
+
+							<!-- Nav -->
+								<nav>
+									<ul>
+										<li><a href="#menu">隢���豢��敶拙�賊�����</a></li>
+									</ul>
+								</nav>
+
+						</div>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+                        <a href="https://www.pilio.idv.tw/" target="_self" style="color:white">
+                        <img src="PilioLogo88.png" style="width:88px"/>
+						<h3>璅����敶拙兢�����潸瓷蝬�</h3></a>
+						<h3>��亦�勗����祉��-撟賊����潸瓷���</h3>
+                        <a href="https://www.taiwanlottery.com/lotto/info/lotto649" target="_blank" style="color:white"><h3>憭扳�����閬����隞�蝝�</h3></a>
+						<ul>
+							<li><a href="https://www.pilio.idv.tw/index.asp">���銝駁��</a></li>
+
+                            <li>
+								<span class="opener">�����啁�����瘣曉蔗蝯����</span>
+								<ul>
+        							<li><a href="https://www.pilio.idv.tw/lto539/lto539_lastest_result.asp">隞�敶�539���39璅����敶拇����唳晷敶拍�����</a></li>
+        							<li><a href="https://www.pilio.idv.tw/ltobig/ltobig_lastest_result.asp">憭扳��������49璅����敶拇����唳晷敶拍�����</a></li>
+        							<li><a href="https://www.pilio.idv.tw/lto/lto_lastest_result.asp">憡����敶拇����唳晷敶拍�����</a></li>
+        							<li><a href="https://www.pilio.idv.tw/lto/lto34_lastest_result.asp">3���敶押��4���敶拇����唳晷敶拍�����</a></li>
+								</ul>
+							</li>
+
+							<li><a href="https://www.pilio.idv.tw/lto539/list.asp" style="font-size:4vmin">隞�敶�539������蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/ltohk/list.asp" style="font-size:4vmin">��剖��敶拚�����蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/ltobig/list.asp" style="font-size:4vmin">憭扳�����������蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/lto/list.asp" style="font-size:4vmin">憡����敶拚�����蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/lto/list3.asp" style="font-size:4vmin">3���敶拚�����蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/lto/list4.asp" style="font-size:4vmin">4���敶拚�����蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/bingo/list.asp" style="font-size:4vmin">Bingo Bingo 鞈����鞈����������蝯����</a></li>
+							<li><a href="https://www.pilio.idv.tw/instant/list.asp" style="font-size:4vmin">��桀�格��撠����</a></li>
+							<li><a href="https://www.pilio.idv.tw/main_lto539.asp" style="font-size:4vmin">隞�敶�539撠����</a></li>
+							<li><a href="https://www.pilio.idv.tw/main_ltohk.asp" style="font-size:4vmin">��剖��敶拙�����</a></li>
+							<li><a href="https://www.pilio.idv.tw/main_ltobig.asp" style="font-size:4vmin">憭扳�����撠����</a></li>
+							<li><a href="https://www.pilio.idv.tw/main_lto.asp" style="font-size:4vmin">憡����敶拙�����</a></li>
+							<li><a href="https://www.pilio.idv.tw/main_lto34.asp" style="font-size:4vmin">34���敶拙�����</a></li>
+							<li><a href="https://www.pilio.idv.tw/lto/listuno.asp" style="font-size:4vmin">蝯曹����潛巨撠����</a></li>
+							<li><a href="https://www.pilio.idv.tw/luckdraw/LoadPic.cshtml" style="font-size:4vmin">敶拙�豢�賜��瘣餃��</a></li>
+                            <li>
+								<span class="opener">璅�������-������璅����撠����</span>
+								<ul>
+        							<li><a href="https://www.lotto-8.com/Ghana/listltoGHA539.asp">餈衣��-Daywa 5/39 ������蝯����</a></li>
+        							<li><a href="https://www.lotto-8.com/USA/listltoFT5.asp">蝢����-California Fantasy 5 ������蝯����</a></li>
+        							<li><a href="https://www.lotto-8.com/Ghana/main.asp">餈衣��璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/USA/main.asp">蝢����璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Vietnam/main.asp">頞����璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Malaysia/main.asp">擐砌��镼蹂��璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Philippines/main.asp">��脣��鞈�璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Japan/main.asp">��交�祆�����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Korea/main.asp">������璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/China/main.asp/">銝剖��璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Singapore/main.asp">��啣����⊥�����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Canada/main.asp">�����踹之璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/UK/main.asp">��勗��璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Europe/main.asp">甇�瘣脫�����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/Australia/main.asp">瞉單散璅����撠����</a></li>
+        							<li><a href="https://www.lotto-8.com/">璅������脣�����璅����撠����</a></li>
+								</ul>
+							</li>
+							<li><a href="https://www.pilio.idv.tw/disclaimer.asp" style="font-size:4vmin">���鞎祈�脫��</a></li>
+							<li><a href="https://www.pilio.idv.tw/privacypolicy.asp" style="font-size:4vmin">��梁��甈�靽�霅瑟�輻��</a></li>
+							<li><a href="https://www.pilio.idv.tw/Restrict.asp" style="font-size:4vmin">蝭���園��摨行��瘜�</a></li>
+							<li><a href="#" style="font-size:4vmin">��芣遛18甇脖��敺�鞈潸眺���������敶拙��</a></li>
+
+
+						</ul>
+					</nav>
+
+
+				<!-- Main -->
+					<div id="main" style="margin-top:-66px">
+
+						<div class="inner">
+							<header>
+
+                                <div id="DrawLive" style="display:none">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="text-align:center">
+                                                <span style="color:#000000;font-size:6vmin;font-weight:bold">憭扳�������������湔�胎ive</span>
+                                                <br />
+                                                <img src="DrawLive.gif" />
+                                                <br />
+                                                <span id="DrawLiveStr" class="title" style="font-size:7vmin;color:#000000;font-weight:bold">隢�銝���冽����湔��,�����������芸����箇��</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+							</header>
+
+<!-- 皛�獢踵�批�嗅�� -->
+<div class="table-toolbar">
+  <label for="fontOffset">摮�憭批��</label>
+  <input type="range" id="fontOffset" min="-5" max="5" step="0.1" value="0">
+  <output id="fontOffsetVal"></output>
+</div>
+
+                <table class="dynamic-table">
+                    <tr>
+                        <td style="background-color: #B02D00; color: #FFFFFF; font-size: 5vmin; font-weight: bold;text-align:center;padding:0px">��交��</td>
+                        <td style="background-color: #B02D00; color: #FFFFFF; font-size: 5vmin; font-weight: bold;text-align:center;padding:0px">憭扳�����銝剔�����蝣�</td>
+                        <td style="background-color: #B02D00; color: #FFFFFF; font-size: 5vmin; font-weight: bold;text-align:center;padding:0px">���</td>
+                    </tr>
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">02/06<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            04,&nbsp;12,&nbsp;24,&nbsp;25,&nbsp;39,&nbsp;48
+                        </td>
+                        <td class="bonus-cell">09</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">02/03<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            06,&nbsp;14,&nbsp;32,&nbsp;33,&nbsp;39,&nbsp;43
+                        </td>
+                        <td class="bonus-cell">13</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">01/30<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            09,&nbsp;13,&nbsp;27,&nbsp;31,&nbsp;32,&nbsp;39
+                        </td>
+                        <td class="bonus-cell">19</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">01/27<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            04,&nbsp;11,&nbsp;24,&nbsp;25,&nbsp;29,&nbsp;30
+                        </td>
+                        <td class="bonus-cell">08</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">01/23<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            21,&nbsp;23,&nbsp;32,&nbsp;36,&nbsp;39,&nbsp;43
+                        </td>
+                        <td class="bonus-cell">12</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">01/20<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            02,&nbsp;07,&nbsp;26,&nbsp;41,&nbsp;44,&nbsp;45
+                        </td>
+                        <td class="bonus-cell">46</td>
+
+                    </tr>
+
+
+                </table>
+
+<div id="divAD" style="margin-top:0px">
+
+
+
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/21834259262/AviviD_pilioidv_text_middle', [[1, 1], [330, 90], [360, 90], [550, 90], [650, 90]], 'div-gpt-ad-1749630492704-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
+
+<!-- /21834259262/AviviD_pilioidv_text_middle -->
+<div id='div-gpt-ad-1749630492704-0' style='min-width: 330px; min-height: 90px;'>
+  <script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1749630492704-0'); });
+  </script>
+</div>
+<br />
+
+<iframe id="Merit" width="100%" height="350"  src="https://www.youtube.com/embed/Lvurxb0iSZM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe>
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/sql29.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳�����鈭�������銝����蝯������箸活���</span></a>
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/sql28.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳�����������頞典�Ｗ��</span></a>
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/sqlaibrief.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳����� AI敹怠��</span></a>
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/sql17.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳�����蝯梯����豢�����</span></a>
+
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/sql16.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳�����銝����璈����������������</span></a>
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/sql23.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳�����擃���賭葉������頝舀�����������</span></a>
+<br />
+        <a target="_self" href="https://www.pilio.idv.tw/ltobig/ltosharebig.asp" class="button" style="background-color:#AA0000;width:100%"><span style="color:white;font-size:16px">憭扳�������梢�����������鈭�</span></a>
+<br />
+
+
+<img src="drawlist/close.png" style="width:30px" onclick="hide_ad()"/>
+</div>     
+               <table id="ltotable" class="dynamic-table" >
+
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">01/16<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            09,&nbsp;10,&nbsp;21,&nbsp;22,&nbsp;25,&nbsp;36
+                        </td>
+                        <td class="bonus-cell">20</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">01/13<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            02,&nbsp;10,&nbsp;18,&nbsp;19,&nbsp;39,&nbsp;49
+                        </td>
+                        <td class="bonus-cell">24</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">01/09<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            01,&nbsp;07,&nbsp;13,&nbsp;14,&nbsp;34,&nbsp;45
+                        </td>
+                        <td class="bonus-cell">08</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">01/06<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            02,&nbsp;23,&nbsp;33,&nbsp;38,&nbsp;39,&nbsp;45
+                        </td>
+                        <td class="bonus-cell">06</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">01/02<br>26(鈭�)</td>
+                        <td class="number-cell">
+                            03,&nbsp;07,&nbsp;16,&nbsp;19,&nbsp;40,&nbsp;42
+                        </td>
+                        <td class="bonus-cell">12</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">12/30<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            05,&nbsp;10,&nbsp;15,&nbsp;20,&nbsp;24,&nbsp;29
+                        </td>
+                        <td class="bonus-cell">34</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">12/26<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            05,&nbsp;07,&nbsp;09,&nbsp;14,&nbsp;17,&nbsp;30
+                        </td>
+                        <td class="bonus-cell">47</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">12/23<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            01,&nbsp;03,&nbsp;12,&nbsp;33,&nbsp;39,&nbsp;41
+                        </td>
+                        <td class="bonus-cell">29</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">12/19<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            06,&nbsp;08,&nbsp;11,&nbsp;12,&nbsp;18,&nbsp;46
+                        </td>
+                        <td class="bonus-cell">37</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">12/16<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            06,&nbsp;07,&nbsp;15,&nbsp;19,&nbsp;24,&nbsp;33
+                        </td>
+                        <td class="bonus-cell">46</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">12/12<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            15,&nbsp;17,&nbsp;24,&nbsp;26,&nbsp;40,&nbsp;47
+                        </td>
+                        <td class="bonus-cell">33</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">12/09<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            05,&nbsp;10,&nbsp;18,&nbsp;26,&nbsp;28,&nbsp;44
+                        </td>
+                        <td class="bonus-cell">48</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">12/05<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            08,&nbsp;15,&nbsp;23,&nbsp;24,&nbsp;41,&nbsp;47
+                        </td>
+                        <td class="bonus-cell">02</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">12/02<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            14,&nbsp;20,&nbsp;32,&nbsp;35,&nbsp;42,&nbsp;48
+                        </td>
+                        <td class="bonus-cell">28</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">11/28<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            08,&nbsp;12,&nbsp;18,&nbsp;28,&nbsp;37,&nbsp;46
+                        </td>
+                        <td class="bonus-cell">34</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; ">
+                        <td class="date-cell">11/25<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            02,&nbsp;10,&nbsp;12,&nbsp;20,&nbsp;23,&nbsp;24
+                        </td>
+                        <td class="bonus-cell">28</td>
+
+                    </tr>
+
+
+                   
+                    <tr style="text-align:center; background-color: #FFDBCE;">
+                        <td class="date-cell">11/21<br>25(鈭�)</td>
+                        <td class="number-cell">
+                            14,&nbsp;20,&nbsp;21,&nbsp;28,&nbsp;31,&nbsp;46
+                        </td>
+                        <td class="bonus-cell">37</td>
+
+                    </tr>
+
+
+                </table>
+                <input id="Button1" onclick="addltotable()" type="button" style="font-size: 4vmin; font-weight: bold;width:100%;margin-bottom:5px" value="���憭�憿舐內 10 ���" />
+                <input id="lastindex" type="hidden" value="2383" />
+
+                <input id="desc" type="hidden" value="desc" />
+
+
+<br /><br />
+
+
+
+                            <form id="pageselect" action="list.asp?orderby=new">
+                                <select style="font-size:5vmin;background-color:#FF9294" name="indexpage" onchange="this.form.submit()">
+                                    <option value="" selected="selected">���甈�</option>
+
+
+                                    <option value="1">1</option>
+
+                                    <option value="2">2</option>
+
+                                    <option value="3">3</option>
+
+                                    <option value="4">4</option>
+
+                                    <option value="5">5</option>
+
+                                    <option value="6">6</option>
+
+                                    <option value="7">7</option>
+
+                                    <option value="8">8</option>
+
+                                    <option value="9">9</option>
+
+                                    <option value="10">10</option>
+
+                                    <option value="11">11</option>
+
+                                    <option value="12">12</option>
+
+                                    <option value="13">13</option>
+
+                                    <option value="14">14</option>
+
+                                    <option value="15">15</option>
+
+                                    <option value="16">16</option>
+
+                                    <option value="17">17</option>
+
+                                    <option value="18">18</option>
+
+                                    <option value="19">19</option>
+
+                                    <option value="20">20</option>
+
+                                    <option value="21">21</option>
+
+                                    <option value="22">22</option>
+
+                                    <option value="23">23</option>
+
+                                    <option value="24">24</option>
+
+                                    <option value="25">25</option>
+
+                                    <option value="26">26</option>
+
+                                    <option value="27">27</option>
+
+                                    <option value="28">28</option>
+
+                                    <option value="29">29</option>
+
+                                    <option value="30">30</option>
+
+                                    <option value="31">31</option>
+
+                                    <option value="32">32</option>
+
+                                    <option value="33">33</option>
+
+                                    <option value="34">34</option>
+
+                                    <option value="35">35</option>
+
+                                    <option value="36">36</option>
+
+                                    <option value="37">37</option>
+
+                                    <option value="38">38</option>
+
+                                    <option value="39">39</option>
+
+                                    <option value="40">40</option>
+
+                                    <option value="41">41</option>
+
+                                    <option value="42">42</option>
+
+                                    <option value="43">43</option>
+
+                                    <option value="44">44</option>
+
+                                    <option value="45">45</option>
+
+                                    <option value="46">46</option>
+
+                                    <option value="47">47</option>
+
+                                    <option value="48">48</option>
+
+                                    <option value="49">49</option>
+
+                                    <option value="50">50</option>
+
+                                    <option value="51">51</option>
+
+                                    <option value="52">52</option>
+
+                                    <option value="53">53</option>
+
+                                    <option value="54">54</option>
+
+                                    <option value="55">55</option>
+
+                                    <option value="56">56</option>
+
+                                    <option value="57">57</option>
+
+                                    <option value="58">58</option>
+
+                                    <option value="59">59</option>
+
+                                    <option value="60">60</option>
+
+                                    <option value="61">61</option>
+
+                                    <option value="62">62</option>
+
+                                    <option value="63">63</option>
+
+                                    <option value="64">64</option>
+
+                                    <option value="65">65</option>
+
+                                    <option value="66">66</option>
+
+                                    <option value="67">67</option>
+
+                                    <option value="68">68</option>
+
+                                    <option value="69">69</option>
+
+                                    <option value="70">70</option>
+
+                                    <option value="71">71</option>
+
+                                    <option value="72">72</option>
+
+                                    <option value="73">73</option>
+
+                                    <option value="74">74</option>
+
+                                    <option value="75">75</option>
+
+                                    <option value="76">76</option>
+
+                                    <option value="77">77</option>
+
+                                    <option value="78">78</option>
+
+                                    <option value="79">79</option>
+
+                                    <option value="80">80</option>
+
+                                    <option value="81">81</option>
+
+                                    <option value="82">82</option>
+
+                                    <option value="83">83</option>
+
+                                    <option value="84">84</option>
+
+                                    <option value="85">85</option>
+
+                                    <option value="86">86</option>
+
+                                    <option value="87">87</option>
+
+                                    <option value="88">88</option>
+
+                                    <option value="89">89</option>
+
+                                    <option value="90">90</option>
+
+                                    <option value="91">91</option>
+
+                                    <option value="92">92</option>
+
+                                    <option value="93">93</option>
+
+                                    <option value="94">94</option>
+
+                                    <option value="95">95</option>
+
+                                    <option value="96">96</option>
+
+                                    <option value="97">97</option>
+
+                                    <option value="98">98</option>
+
+                                    <option value="99">99</option>
+
+                                    <option value="100">100</option>
+
+                                    <option value="101">101</option>
+
+                                    <option value="102">102</option>
+
+                                    <option value="103">103</option>
+
+                                    <option value="104">104</option>
+
+                                    <option value="105">105</option>
+
+                                </select>
+                            </form>
+                            
+                            
+<a target="_self" class="button" href="list.asp?indexpage=1&orderby=new" style="font-size: 4vmin; font-weight: bold;width:100%">蝚砌�����</a><br /><br />
+
+<a target="_self" class="button" href="list.asp?indexpage=2&orderby=new" style="font-size: 4vmin; font-weight: bold;width:100%">銝�銝����</a><br /><br />
+
+<a target="_self" class="button" href="list.asp?indexpage=105&orderby=new" style="font-size: 4vmin; font-weight: bold;width:100%">�����恍��</a><br /><br />
+
+<br />
+
+
+<br />
+
+<a target="_top" class="button" href="list.asp?indexpage=1&orderby=new" style="font-size: 4vmin; font-weight: bold;width:100%">��望�啣�啗�����摨�</a><br /><br /> 
+<a target="_top" class="button" href="list.asp?indexpage=1&orderby=old" style="font-size: 4vmin; font-weight: bold;width:100%">��梯����唳�唳��摨�</a><br /><br />   
+
+
+<div>
+    <table style="width: 100%;">
+        <tr>
+            <td>��祆��瘣餃��韐����</td>
+        </tr>
+        <tr>
+            <td>
+              <a href="https://www.pilio.idv.tw/luckdraw/orderby.cshtml" style="color:#C40000;font-weight:bold"><img src="https://www.pilio.idv.tw/luckdraw/P202602.jpg" width="300" /><br />銝���喳蔗��豢�賜��瘣餃��</a>
+               <p style="font-weight:bold"> 霈���函��敶拙�詨��憭�銝�甈∩葉���璈���� ^_^ </p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+                <a href="https://www.pilio.idv.tw/index_function_Add.asp?ltotitle=憭扳�����-���������蝣潭�亥岷&ltourl=www.pilio.idv.tw/ltobig/list.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%">��� �����亙虜��典����� ���</a><br />
+
+                <span style="font-size:3vmin">��祇����Ｘ�舀��49璅����敶拚��������蝣潸�芸��撠���������踝��甇∟��閮剖��雿輻��</span><br>
+
+                <a href="https://www.pilio.idv.tw/CheckNoSet.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> ��芸��撠���������質身摰� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/listbig_QuickCheck.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 敹恍��撠���������� </a><br /><br />
+
+<script type="text/javascript" src="https://adc.tamedia.com.tw/rmadp/static/js/gm-sdk7-mobile.js"></script>
+	    <div id="MADdpzone3"></div>
+	    <script type="text/javascript" language="javascript">
+	        adLoad2('sA51504764620084d', '198', 'MADdpzone3', true, 0, callback); //甇斤��靘�銵函內暺����撱����敺������阡����啣�����
+
+	        function callback(status) {
+	            console.log("callback status : " + status);
+	        }
+	    </script>
+<br>
+                <a href="https://www.pilio.idv.tw/ltobig/sql16trend.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 憭扳�����銝����璈����餈�30���頞典�Ｗ�� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql26.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 撠暹�詨����貉�� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltoFloat.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 瘝���斗筑摮�瘙������� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/listBBK.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> ���������蝣澆��銵�(������) </a><br /><br />
+
+
+        <p style="font-size:4vmin;margin-bottom:5px">�����桀�格��-蝺�隞賣�刻�艾��</p>
+
+                                    <div style="width:100%;text-align:center">
+                                    <a href="https://www.pilio.idv.tw/instant/instant.asp?num=20260129_152115279_1" target="_self">
+                                    <p style="font-size:6vmin;color:blue;font-weight:bold;margin-bottom:5px">��券��撟�</p>
+    								<img style="width:300px" src="https://www.pilio.idv.tw/instant/images/20260129_152115279_1.jpg" alt="" />
+                                    <p style="font-size:5vmin;color:red;margin-bottom:5px">��桀�對��100���_������嚗�50��砍��</p>
+                                    </a>
+                                    <a href="https://www.pilio.idv.tw/instant/list.asp" target="_self">
+                                        <p style="font-size:4vmin;color:black;font-weight:bold;margin-bottom:5px"> [ ��游�������啣�桀�格��隞�蝝� ] </p>
+                                    </a>
+                                    <br />
+                                    </div>
+
+
+
+                <a href="https://www.pilio.idv.tw/ltobig/ltosharebig.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 敶抵蕙��梢�����蝣澆��鈭� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql23.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 擃���賭葉������頝舀����������� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql22.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> ������雿���貉粥��Ｗ����� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/luckdraw/LoadPic.cshtml" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 銝���喳�祉��敶拙�豢�賜�� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql16.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 銝����璈���������������� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql20.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 憭扳�����_銝���������箸活��� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltosql19.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 餈������瑞�梢�����蝣潭�亥岷 </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltosql18.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 敶拍��������蝯梯�����銵� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql17.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> 敶拍����芷����箇絞閮������� </a><br /><br />
+                <a href="https://www.pilio.idv.tw/ltobig/sql15.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> ���������蝯梯�������� </a>
+                <br /><br />
+                <a href="https://www.pilio.idv.tw/main_ltobig.asp" target="_self" class="button" style="font-size: 4vmin; font-weight: bold;width:100%;background-color:#FFD6D8"> ��游��憭扳�����������.. </a>
+                <br /><br />
+                <span style="font-size:16px;font-weight:bold;color:blue">
+                甇∟��銝�頛� 璅������� ���璈�APP,��脣�������唳��敹急�����������鞈�閮�
+                </span>
+                <br />
+                <a target="_blank" href="https://apps.apple.com/us/app/%E6%A8%82%E9%80%8F%E7%99%BC/id882169523" ><img src="https://www.pilio.idv.tw/APP_iphone.png"/><br />iPhone ���璈�APP,隢�暺�甇方�莧pp Store ���撠�"璅�������",銝虫��頛�摰�鋆�..</a><BR /><BR />
+                <a target="_blank" href="https://play.google.com/store/apps/details?id=tw.idv.pilio&hl=zh_TW" ><img src="https://www.pilio.idv.tw/APP_android.png"/><br />Android ���璈�APP,隢�暺�甇方�蛄oogle Play ���撠�"璅�������",銝虫��頛�摰�鋆�.</a><BR /><br />
+
+                            
+                        </div>
+
+
+
+					</div>
+
+	    <script type="text/javascript" language="javascript">
+	        function hide_ad()
+	        {
+	            //alert("hide");
+	            var result_style = document.getElementById('divAD').style;
+	            result_style.display = 'none';
+	        }
+	    </script>
+
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<section>
+                    <iframe src="https://www.facebook.com/plugins/like.php?href=http://www.pilio.idv.tw/ltobig/list.asp&layout=button_count&show_faces=0&width=90&height=24&locale=zh_TW" frameborder="0" scrolling="no" style="width:150px;height:24px;"> </iframe>
+
+								<h2>�����貊��蝯脣��</h2>
+								<ul class="icons">
+									<li><a href="https://www.facebook.com/www.pilio.idv.tw/" class="icon style2 fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+								</ul>
+							</section>
+                        <p style="color:red">��芣遛18甇脖��敺�鞈潸眺���������敶拙��</p>
+                        <a href="https://www.taiwanlottery.com/restrict_over_betting/info">蝭���園��摨行��瘜�</a>
+                          
+							<ul class="copyright">
+								<li>Copyright穢 2002-2026 All Rights Reserved </li><li> 璅����敶拙兢�����潸瓷蝬�  www.pilio.idv.tw</li>
+								<li>������靽∠拳 swiven@ms39.hinet.net</li>
+
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+window.googletag = window.googletag || {cmd: []};
+googletag.cmd.push(function() {   
+var slot = googletag.defineOutOfPageSlot('/7682122,81505757/pilio.idv.tw_mob_anchor_320x50', googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR);  
+if (slot) slot.addService(googletag.pubads()); 
+googletag.enableServices();
+googletag.display(slot);
+});
+</script>
+
+
+
+
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <script>
+      window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+    var slot = googletag.defineOutOfPageSlot('/21787810958,81505757/TW_pilio.idv.tw_res_all_interstital_300x250//336x280//320x480//728x250//728x90//1024x250',googletag.enums.OutOfPageFormat.INTERSTITIAL);
+    if (slot) slot.addService(googletag.pubads());
+        googletag.enableServices();
+          googletag.display(slot);
+      });
+    </script>
+
+    
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6PG4ZFMZ6C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6PG4ZFMZ6C');
+</script>
+
+
+	</body>
+</html>
