@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { BIG_LOTTO_DRAWS, SUPER_LOTTO_DRAWS } from './data/draws';
 
 // Unility
 function cn(...inputs) {
@@ -100,6 +101,7 @@ const App = () => {
   const [lottoType, setLottoType] = useState('BIG_LOTTO');
   const [algorithm, setAlgorithm] = useState('thompson');
   const [dataScope, setDataScope] = useState('y2026');
+  const [recentN, setRecentN] = useState(10);
   const [viewMode, setViewMode] = useState('main');
   const [recommendation, setRecommendation] = useState({ main: [], special: null });
   const [expertAnalysis, setExpertAnalysis] = useState(null);
@@ -107,11 +109,38 @@ const App = () => {
 
   const currentSeeds = useMemo(() => {
     const config = LOTTO_TYPES[lottoType];
+
+    if (dataScope === 'recent') {
+      const rawDraws = lottoType === 'BIG_LOTTO' ? BIG_LOTTO_DRAWS : SUPER_LOTTO_DRAWS;
+      const selectedDraws = rawDraws.slice(0, recentN);
+
+      const mainCounts = {};
+      const specialCounts = {};
+
+      const maxMain = config.max;
+      const maxSpecial = config.specialMax || (lottoType === 'SUPER_LOTTO' ? 8 : 49);
+
+      for (let i = 1; i <= maxMain; i++) mainCounts[String(i).padStart(2, '0')] = 0;
+      for (let i = 1; i <= maxSpecial; i++) specialCounts[String(i).padStart(2, '0')] = 0;
+
+      selectedDraws.forEach(draw => {
+        if (lottoType === 'BIG_LOTTO') {
+          draw.main.forEach(n => mainCounts[String(n).padStart(2, '0')] = (mainCounts[String(n).padStart(2, '0')] || 0) + 1);
+          if (draw.special) specialCounts[String(draw.special).padStart(2, '0')] = (specialCounts[String(draw.special).padStart(2, '0')] || 0) + 1;
+        } else {
+          draw.zone1.forEach(n => mainCounts[String(n).padStart(2, '0')] = (mainCounts[String(n).padStart(2, '0')] || 0) + 1);
+          if (draw.zone2) specialCounts[String(draw.zone2).padStart(2, '0')] = (specialCounts[String(draw.zone2).padStart(2, '0')] || 0) + 1;
+        }
+      });
+
+      return { main: mainCounts, special: specialCounts };
+    }
+
     const raw = config.seeds[dataScope];
     return lottoType === 'BIG_LOTTO'
       ? { main: raw.main, special: raw.special }
       : { main: raw.zone1, special: raw.zone2 };
-  }, [lottoType, dataScope]);
+  }, [lottoType, dataScope, recentN]);
 
   const chartData = useMemo(() => {
     const config = LOTTO_TYPES[lottoType];
@@ -134,7 +163,7 @@ const App = () => {
     setIsAnalyzing(true);
     setTimeout(() => {
       const config = LOTTO_TYPES[lottoType];
-      const totalSampleBase = dataScope === 'all' ? 4000 : 300;
+      const totalSampleBase = dataScope === 'all' ? 4000 : (dataScope === 'recent' ? recentN * 10 : 300);
 
       const calculateScore = (success, total, alg) => {
         if (alg === 'thompson') {
@@ -142,7 +171,7 @@ const App = () => {
           const beta = 1 + (total - success);
           const mean = alpha / (alpha + beta);
           const std = Math.sqrt((alpha * beta) / (Math.pow(alpha + beta, 2) * (alpha + beta + 1)));
-          const factor = dataScope === 'y2026' ? 2.5 : 3;
+          const factor = (dataScope === 'y2026' || dataScope === 'recent') ? 2.5 : 3;
           return mean + (Math.random() - 0.5) * std * factor;
         } else if (alg === 'ucb1') {
           return (success / (total + 1)) + Math.sqrt((2 * Math.log(total + 1)) / (success + 1));
@@ -184,7 +213,7 @@ const App = () => {
 
       setRecommendation({ main: mainPicks, special: specialPick });
 
-      const scopeText = dataScope === 'all' ? "全歷史數據" : "僅 2026 年數據";
+      const scopeText = dataScope === 'all' ? "全歷史數據" : (dataScope === 'recent' ? `近 ${recentN} 期數據` : "僅 2026 年數據");
       const summaries = {
         thompson: `基於${scopeText}，湯普森抽樣法強化了近期熱門號碼的分散機率，適合追求近期趨勢。`,
         ucb1: `基於${scopeText}，UCB1 置信上限法搜尋具有「反彈潛力」的冷門獎號。`,
@@ -294,28 +323,42 @@ const App = () => {
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                     <History className="w-3 h-3" /> Data Scope
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {['all', 'y2026'].map(scope => (
+                  <div className="grid grid-cols-3 gap-2">
+                    {['all', 'y2026', 'recent'].map(scope => (
                       <button
                         key={scope}
                         onClick={() => setDataScope(scope)}
                         className={cn(
-                          "relative p-4 rounded-2xl border transition-all text-left group overflow-hidden",
+                          "relative p-3 rounded-xl border transition-all text-left group overflow-hidden flex flex-col items-center justify-center",
                           dataScope === scope
                             ? "bg-indigo-600/20 border-indigo-500/50 text-white"
                             : "bg-slate-900/50 border-white/5 text-slate-500 hover:border-white/10"
                         )}
                       >
-                        <div className="text-sm font-bold relative z-10">
-                          {scope === 'all' ? 'All History' : '2026 Data'}
-                        </div>
-                        <div className="text-[10px] opacity-60 mt-1 relative z-10">
-                          {scope === 'all' ? 'Conservative' : 'Aggressive'}
+                        <div className="text-xs font-bold relative z-10 whitespace-nowrap">
+                          {scope === 'all' ? '歷史' : (scope === 'recent' ? '近期' : '2026')}
                         </div>
                         {dataScope === scope && <div className="absolute inset-0 bg-indigo-500/10 animate-pulse z-0" />}
                       </button>
                     ))}
                   </div>
+
+                  {/* Recent N Input */}
+                  {dataScope === 'recent' && (
+                    <div className="animate-in fade-in slide-in-from-top-2">
+                      <div className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
+                        <span className="text-xs text-slate-400 font-bold whitespace-nowrap">最近期數:</span>
+                        <input
+                          type="number"
+                          min="5"
+                          max="50"
+                          value={recentN}
+                          onChange={(e) => setRecentN(Number(e.target.value))}
+                          className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-indigo-500 text-center font-mono"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-4">
