@@ -16,153 +16,265 @@ def create_session():
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('http://', adapter)
     session.mount('https://', adapter)
-    session.verify = False 
     requests.packages.urllib3.disable_warnings()
     return session
 
 def fetch_big_lotto():
-    # Source: https://www.pilio.idv.tw/ltobig/list.asp
-    # This site lists recent draws in a table.
-    # format: Date ... Numbers ... Special
-    
-    url = "https://www.pilio.idv.tw/ltobig/list.asp"
-    print(f"Fetching Big Lotto from {url}...")
-    
+    """
+    使用 pilio JSON API 抓取大樂透歷史資料
+    API: https://www.pilio.idv.tw/Json_ltonew.asp?Lkind=ltobig&Lindex=XXX&Ldesc=desc
+    """
     session = create_session()
+    all_draws = []
+    
+    # 先抓取首頁獲取初始 lastindex
+    print("Fetching Big Lotto initial page...")
     try:
-        response = session.get(url, headers=HEADERS, timeout=15, verify=False)
+        response = session.get("https://www.pilio.idv.tw/ltobig/list.asp", 
+                              headers=HEADERS, timeout=15, verify=False)
         response.encoding = 'big5'
         html = response.text
         
-        # Pilio Structure (from debug):
-        # <td class="date-cell">02/06<br>26(五)</td>
-        # <td class="number-cell">
-        #     04,&nbsp;12,&nbsp;24,&nbsp;25,&nbsp;39,&nbsp;48
-        # </td>
-        # <td class="bonus-cell">09</td>
-        
-        # We need to find "date-cell".
-        # It contains MM/DD. The year is on next line "26(...)". 
-        
-        # We can split by <td class="date-cell">
-        
+        # 解析初始資料
         cells = html.split('<td class="date-cell">')
-        draws = []
+        for cell in cells[1:]:
+            draw = parse_big_lotto_cell(cell)
+            if draw:
+                all_draws.append(draw)
         
-        for cell in cells[1:]: # skip first empty chunk
-            # cell starts with MM/DD<br>YY...
-            # Example: 02/06<br>26(五)</td> ... <td class="number-cell">...
+        # 獲取 lastindex
+        lastindex_match = re.search(r'id="lastindex"[^>]*value="(\d+)"', html)
+        if lastindex_match:
+            lastindex = int(lastindex_match.group(1))
+        else:
+            lastindex = 2383  # 預設值
             
-            # Extract Date
-            date_match = re.search(r'(\d{2}/\d{2})<br>(\d{2})', cell)
-            if not date_match: continue
-            
-            md = date_match.group(1) # 02/06
-            yy = date_match.group(2) # 26
-            year = "20" + yy
-            full_date = f"{year}/{md}"
-            
-            # Extract Main Numbers
-            # They are in <td class="number-cell">
-            # 04,&nbsp;12,...
-            
-            num_cell_match = re.search(r'class="number-cell">\s*(.*?)\s*</td>', cell, re.DOTALL)
-            if not num_cell_match: continue
-            
-            num_text = num_cell_match.group(1)
-            # Replace &nbsp; with space, remove commas
-            num_text = num_text.replace('&nbsp;', ' ').replace(',', ' ')
-            
-            # Find 6 numbers
-            nums = [int(n) for n in re.findall(r'\d+', num_text)]
-            if len(nums) < 6: continue
-            main = nums[:6]
-            
-            # Extract Special
-            # <td class="bonus-cell">09</td>
-            bonus_match = re.search(r'class="bonus-cell">\s*(\d+)\s*</td>', cell)
-            if not bonus_match: continue
-            special = int(bonus_match.group(1))
-            
-            draws.append({
-                "date": full_date,
-                "main": main,
-                "special": special
-            })
-
-
-        print(f"Found {len(draws)} Big Lotto draws.")
-        return draws
-
+        print(f"Initial: {len(all_draws)} draws, lastindex={lastindex}")
+        
     except Exception as e:
-        print(f"Error fetching Big Lotto: {e}")
+        print(f"Error fetching initial page: {e}")
         return []
+    
+    # 使用 JSON API 抓取更多資料（目標 100+ 期）
+    target_draws = 100
+    max_iterations = 10  # 最多請求 10 次
+    
+    for i in range(max_iterations):
+        if len(all_draws) >= target_draws:
+            break
+            
+        time.sleep(1)  # 禮貌性延遲
+        
+        url = f"https://www.pilio.idv.tw/Json_ltonew.asp?Lkind=ltobig&Lindex={lastindex}&Ldesc=desc"
+        print(f"Fetching more data from API (iteration {i+1})...")
+        
+        try:
+            response = session.post(url, headers=HEADERS, timeout=15, verify=False)
+            data = response.json()
+            
+            if 'lotto' not in data or len(data['lotto']) == 0:
+                print("No more data available")
+                break
+                
+            for item in data['lotto']:
+                # JSON 格式: {date: "02/06<br>26(五)", num: "04,12,24,25,39,48", sp: "09", dex: 2383}
+                date_raw = item.get('date', '')
+                num_raw = item.get('num', '')
+                sp_raw = item.get('sp', '')
+                lastindex = item.get('dex', lastindex)
+                if isinstance(lastindex, str):
+                    lastindex = int(lastindex)
+                
+                # 解析日期 "02/06<br>26(五)" -> "2026/02/06"
+                date_match = re.search(r'(\d{2}/\d{2})<br>(\d{2})', date_raw)
+                if date_match:
+                    md = date_match.group(1)
+                    yy = date_match.group(2)
+                    full_date = f"20{yy}/{md}"
+                    
+                    # 解析號碼
+                    nums = [int(n) for n in re.findall(r'\d+', num_raw)]
+                    if len(nums) >= 6:
+                        special = int(sp_raw) if sp_raw.isdigit() else 0
+                        
+                        # 避免重複
+                        if not any(d['date'] == full_date for d in all_draws):
+                            all_draws.append({
+                                "date": full_date,
+                                "main": nums[:6],
+                                "special": special
+                            })
+            
+            print(f"Total: {len(all_draws)} draws")
+            
+        except Exception as e:
+            print(f"Error fetching JSON: {e}")
+            break
+    
+    # 按日期排序（新到舊）
+    all_draws.sort(key=lambda x: x['date'], reverse=True)
+    print(f"Found {len(all_draws)} Big Lotto draws total.")
+    return all_draws
+
+def parse_big_lotto_cell(cell):
+    """解析 HTML cell 為 draw dict"""
+    date_match = re.search(r'(\d{2}/\d{2})<br>(\d{2})', cell)
+    if not date_match:
+        return None
+    
+    md = date_match.group(1)
+    yy = date_match.group(2)
+    full_date = f"20{yy}/{md}"
+    
+    num_cell_match = re.search(r'class="number-cell">\s*(.*?)\s*</td>', cell, re.DOTALL)
+    if not num_cell_match:
+        return None
+    
+    num_text = num_cell_match.group(1).replace('&nbsp;', ' ').replace(',', ' ')
+    nums = [int(n) for n in re.findall(r'\d+', num_text)]
+    if len(nums) < 6:
+        return None
+    
+    bonus_match = re.search(r'class="bonus-cell">\s*(\d+)\s*</td>', cell)
+    if not bonus_match:
+        return None
+    
+    return {
+        "date": full_date,
+        "main": nums[:6],
+        "special": int(bonus_match.group(1))
+    }
 
 def fetch_super_lotto():
-    # Source: https://www.pilio.idv.tw/lto/list.asp
-    url = "https://www.pilio.idv.tw/lto/list.asp"
-    print(f"Fetching Super Lotto from {url}...")
-    
+    """
+    使用 pilio JSON API 抓取威力彩歷史資料
+    API: https://www.pilio.idv.tw/Json_ltonew.asp?Lkind=lto&Lindex=XXX&Ldesc=desc
+    """
     session = create_session()
+    all_draws = []
+    
+    print("Fetching Super Lotto initial page...")
     try:
-        response = session.get(url, headers=HEADERS, timeout=15, verify=False)
+        response = session.get("https://www.pilio.idv.tw/lto/list.asp", 
+                              headers=HEADERS, timeout=15, verify=False)
         response.encoding = 'big5'
         html = response.text
         
-        # Super Lotto (Lotto38) uses similar structure
         cells = html.split('<td class="date-cell">')
-        draws = []
-        
         for cell in cells[1:]:
-            date_match = re.search(r'(\d{2}/\d{2})<br>(\d{2})', cell)
-            if not date_match: continue
+            draw = parse_super_lotto_cell(cell)
+            if draw:
+                all_draws.append(draw)
+        
+        lastindex_match = re.search(r'id="lastindex"[^>]*value="(\d+)"', html)
+        if lastindex_match:
+            lastindex = int(lastindex_match.group(1))
+        else:
+            lastindex = 1000
             
-            md = date_match.group(1)
-            yy = date_match.group(2)
-            full_date = f"20{yy}/{md}"
-            
-            num_cell_match = re.search(r'class="number-cell">\s*(.*?)\s*</td>', cell, re.DOTALL)
-            if not num_cell_match: continue
-            
-            num_text = num_cell_match.group(1).replace('&nbsp;', ' ').replace(',', ' ')
-            nums = [int(n) for n in re.findall(r'\d+', num_text)]
-            if len(nums) < 6: continue
-            main = nums[:6]
-            
-            bonus_match = re.search(r'class="bonus-cell">\s*(\d+)\s*</td>', cell)
-            if not bonus_match: continue
-            special = int(bonus_match.group(1))
-            
-            draws.append({
-                "date": full_date,
-                "zone1": main,
-                "zone2": special
-            })
-
-        print(f"Found {len(draws)} Super Lotto draws.")
-        return draws
-
+        print(f"Initial: {len(all_draws)} draws, lastindex={lastindex}")
+        
     except Exception as e:
-        print(f"Error fetching Super Lotto: {e}")
+        print(f"Error fetching initial page: {e}")
         return []
+    
+    target_draws = 100
+    max_iterations = 10
+    
+    for i in range(max_iterations):
+        if len(all_draws) >= target_draws:
+            break
+            
+        time.sleep(1)
+        
+        url = f"https://www.pilio.idv.tw/Json_ltonew.asp?Lkind=lto&Lindex={lastindex}&Ldesc=desc"
+        print(f"Fetching more data from API (iteration {i+1})...")
+        
+        try:
+            response = session.post(url, headers=HEADERS, timeout=15, verify=False)
+            data = response.json()
+            
+            if 'lotto' not in data or len(data['lotto']) == 0:
+                print("No more data available")
+                break
+                
+            for item in data['lotto']:
+                date_raw = item.get('date', '')
+                num_raw = item.get('num', '')
+                sp_raw = item.get('sp', '')
+                lastindex = item.get('dex', lastindex)
+                if isinstance(lastindex, str):
+                    lastindex = int(lastindex)
+                
+                date_match = re.search(r'(\d{2}/\d{2})<br>(\d{2})', date_raw)
+                if date_match:
+                    md = date_match.group(1)
+                    yy = date_match.group(2)
+                    full_date = f"20{yy}/{md}"
+                    
+                    nums = [int(n) for n in re.findall(r'\d+', num_raw)]
+                    if len(nums) >= 6:
+                        special = int(sp_raw) if sp_raw.isdigit() else 0
+                        
+                        if not any(d['date'] == full_date for d in all_draws):
+                            all_draws.append({
+                                "date": full_date,
+                                "zone1": nums[:6],
+                                "zone2": special
+                            })
+            
+            print(f"Total: {len(all_draws)} draws")
+            
+        except Exception as e:
+            print(f"Error fetching JSON: {e}")
+            break
+    
+    all_draws.sort(key=lambda x: x['date'], reverse=True)
+    print(f"Found {len(all_draws)} Super Lotto draws total.")
+    return all_draws
+
+def parse_super_lotto_cell(cell):
+    """解析 HTML cell 為威力彩 draw dict"""
+    date_match = re.search(r'(\d{2}/\d{2})<br>(\d{2})', cell)
+    if not date_match:
+        return None
+    
+    md = date_match.group(1)
+    yy = date_match.group(2)
+    full_date = f"20{yy}/{md}"
+    
+    num_cell_match = re.search(r'class="number-cell">\s*(.*?)\s*</td>', cell, re.DOTALL)
+    if not num_cell_match:
+        return None
+    
+    num_text = num_cell_match.group(1).replace('&nbsp;', ' ').replace(',', ' ')
+    nums = [int(n) for n in re.findall(r'\d+', num_text)]
+    if len(nums) < 6:
+        return None
+    
+    bonus_match = re.search(r'class="bonus-cell">\s*(\d+)\s*</td>', cell)
+    if not bonus_match:
+        return None
+    
+    return {
+        "date": full_date,
+        "zone1": nums[:6],
+        "zone2": int(bonus_match.group(1))
+    }
 
 def update_file(big_draws, super_draws):
-    # Take top 100
-    big_draws = big_draws[:100]
-    super_draws = super_draws[:100]
-    
     if not big_draws or not super_draws:
         print("Insufficient data to update.")
         return
 
     content = f"""// Auto-generated by update_data.py
 // Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+// Big Lotto: {len(big_draws)} draws, Super Lotto: {len(super_draws)} draws
 
 export const BIG_LOTTO_DRAWS = {json.dumps(big_draws, indent=2)};
 
 export const SUPER_LOTTO_DRAWS = {json.dumps(super_draws, indent=2)};
 """
-    # Remove quotes from keys for cleaner JS
     content = re.sub(r'"(date|main|special|zone1|zone2)":', r'\1:', content)
     
     path = "src/data/draws.js"
