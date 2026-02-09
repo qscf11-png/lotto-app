@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-slate-950 text-white antialiased;
+    }
+}
+
+@layer utilities {
+    .glass-card {
+        @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-xl;
+    }
+
+    .text-shadow-glow {
+        text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+
+    .text-shadow-gold {
+        text-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+    }
+}
