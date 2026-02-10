@@ -57,7 +57,8 @@ jobs:
       - name: Deploy to GitHub Pages
         if: steps.check_changes.outputs.changes == 'true'
         run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npm run deploy
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          npx gh-pages -d dist --repo https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git --user "GitHub Action <action@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
