@@ -45,33 +45,63 @@ const LottoBall = ({ num, isSpecial, delay = 0 }) => {
 
 /**
  * 台灣樂透 & 貝氏機器學習演算法
+ * 所有數據從 draws.js 動態計算，每次 GitHub Actions 更新後自動反映最新資料
  */
 
-const DATA_CUTOFF_DATE = "2026/02/09";
+// --- 動態計算 DATA CUTOFF 日期（取所有資料中最新的日期）---
+function getDataCutoff() {
+  const allDates = [
+    ...BIG_LOTTO_DRAWS.map(d => d.date),
+    ...SUPER_LOTTO_DRAWS.map(d => d.date)
+  ];
+  return allDates.sort().pop() || 'N/A';
+}
 
-// --- 大樂透 完整歷史數據 ---
-const BIG_LOTTO_SEED_ALL = {
-  main: { "01": 314, "02": 322, "03": 289, "04": 268, "05": 296, "06": 268, "07": 299, "08": 326, "09": 266, "10": 283, "11": 317, "12": 287, "13": 295, "14": 273, "15": 316, "16": 295, "17": 268, "18": 284, "19": 284, "20": 293, "21": 300, "22": 310, "23": 316, "24": 262, "25": 294, "26": 306, "27": 291, "28": 294, "29": 288, "30": 317, "31": 302, "32": 295, "33": 286, "34": 284, "35": 301, "36": 308, "37": 293, "38": 294, "39": 294, "40": 284, "41": 316, "42": 297, "43": 312, "44": 290, "45": 299, "46": 300, "47": 278, "48": 284, "49": 292 },
-  special: { "01": 36, "02": 55, "03": 55, "04": 50, "05": 48, "06": 56, "07": 46, "08": 55, "09": 55, "10": 59, "11": 47, "12": 41, "13": 54, "14": 54, "15": 46, "16": 43, "17": 32, "18": 51, "19": 45, "20": 33, "21": 51, "22": 44, "23": 36, "24": 69, "25": 42, "26": 56, "27": 42, "28": 53, "29": 51, "30": 55, "31": 63, "32": 38, "33": 55, "34": 41, "35": 44, "36": 47, "37": 61, "38": 49, "39": 53, "40": 52, "41": 66, "42": 58, "43": 48, "44": 39, "45": 49, "46": 44, "47": 39, "48": 43, "49": 56 }
-};
+const DATA_CUTOFF_DATE = getDataCutoff();
 
-// --- 大樂透 2026 年數據 ---
-const BIG_LOTTO_SEED_2026 = {
-  main: { "01": 1, "02": 3, "03": 1, "04": 2, "06": 1, "07": 3, "09": 2, "10": 2, "11": 1, "12": 1, "13": 2, "14": 2, "16": 1, "18": 1, "19": 2, "21": 2, "22": 1, "23": 2, "24": 2, "25": 3, "26": 1, "27": 1, "29": 1, "30": 1, "31": 1, "32": 3, "33": 2, "34": 1, "36": 2, "38": 1, "39": 6, "40": 1, "41": 1, "42": 1, "43": 2, "44": 1, "45": 3, "48": 1, "49": 1 },
-  special: { "06": 1, "08": 2, "09": 1, "12": 2, "13": 1, "19": 1, "20": 1, "24": 1, "46": 1 }
-};
+// --- 動態計算頻率種子數據 ---
+function computeFrequency(draws, type, yearFilter) {
+  const filtered = yearFilter
+    ? draws.filter(d => d.date.startsWith(yearFilter))
+    : draws;
 
-// --- 威力彩 完整歷史數據 ---
-const SUPER_LOTTO_SEED_ALL = {
-  zone1: { "01": 307, "02": 274, "03": 325, "04": 315, "05": 271, "06": 302, "07": 312, "08": 305, "09": 256, "10": 303, "11": 298, "12": 294, "13": 285, "14": 315, "15": 315, "16": 310, "17": 300, "18": 288, "19": 307, "20": 301, "21": 286, "22": 309, "23": 293, "24": 330, "25": 301, "26": 309, "27": 294, "28": 283, "29": 304, "30": 283, "31": 293, "32": 272, "33": 279, "34": 271, "35": 293, "36": 295, "37": 302, "38": 318 },
-  zone2: { "01": 223, "02": 264, "03": 233, "04": 244, "05": 253, "06": 211, "07": 225, "08": 224 }
-};
+  const mainCounts = {};
+  const specialCounts = {};
 
-// --- 威力彩 2026 年數據 ---
-const SUPER_LOTTO_SEED_2026 = {
-  zone1: { "01": 2, "03": 1, "05": 1, "07": 3, "08": 2, "09": 1, "10": 3, "11": 2, "12": 2, "14": 4, "15": 2, "16": 2, "17": 4, "19": 1, "20": 1, "22": 2, "23": 3, "25": 3, "26": 3, "27": 2, "28": 1, "29": 2, "30": 1, "31": 2, "32": 1, "33": 2, "34": 3, "35": 3, "36": 1, "37": 3, "38": 3 },
-  zone2: { "01": 1, "03": 2, "04": 2, "05": 4, "06": 1, "07": 1 }
-};
+  filtered.forEach(draw => {
+    if (type === 'BIG_LOTTO') {
+      draw.main.forEach(n => {
+        const key = String(n).padStart(2, '0');
+        mainCounts[key] = (mainCounts[key] || 0) + 1;
+      });
+      if (draw.special != null) {
+        const key = String(draw.special).padStart(2, '0');
+        specialCounts[key] = (specialCounts[key] || 0) + 1;
+      }
+    } else {
+      draw.zone1.forEach(n => {
+        const key = String(n).padStart(2, '0');
+        mainCounts[key] = (mainCounts[key] || 0) + 1;
+      });
+      if (draw.zone2 != null) {
+        const key = String(draw.zone2).padStart(2, '0');
+        specialCounts[key] = (specialCounts[key] || 0) + 1;
+      }
+    }
+  });
+
+  return type === 'BIG_LOTTO'
+    ? { main: mainCounts, special: specialCounts }
+    : { zone1: mainCounts, zone2: specialCounts };
+}
+
+// --- 大樂透：從 draws.js 動態計算 ---
+const BIG_LOTTO_SEED_ALL = computeFrequency(BIG_LOTTO_DRAWS, 'BIG_LOTTO', null);
+const BIG_LOTTO_SEED_2026 = computeFrequency(BIG_LOTTO_DRAWS, 'BIG_LOTTO', '2026');
+
+// --- 威力彩：從 draws.js 動態計算 ---
+const SUPER_LOTTO_SEED_ALL = computeFrequency(SUPER_LOTTO_DRAWS, 'SUPER_LOTTO', null);
+const SUPER_LOTTO_SEED_2026 = computeFrequency(SUPER_LOTTO_DRAWS, 'SUPER_LOTTO', '2026');
 
 const LOTTO_TYPES = {
   BIG_LOTTO: {
