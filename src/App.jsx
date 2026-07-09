@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import {
   Brain, History, Calendar, Settings2, BarChart3, Sparkles, RefreshCw,
   Dna, Database, Activity, Search, PartyPopper, Zap, Minus, Plus, Info, ChevronRight,
-  AlertTriangle
+  AlertTriangle, CheckCircle2, DownloadCloud
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -220,16 +220,57 @@ const App = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisN, setAnalysisN] = useState(0); // 本次分析實際使用的期數
   const [updateAvailable, setUpdateAvailable] = useState(false); // 偵測到線上有新版本
+  const [checkState, setCheckState] = useState('idle'); // 手動檢查更新狀態：idle | checking | latest | outdated | error
 
-  // 版本檢查：比對線上 version.json 的 commit 與目前執行中的版本，
-  // 不同代表有新版本已部署（App 開啟時與切回前景時都會檢查）
+  // 比對線上 version.json 的 commit 與目前執行中的版本，不同代表有新版本已部署
+  const fetchRemoteVersion = async () => {
+    const res = await fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('fetch failed');
+    return res.json();
+  };
+
+  // 強制更新：清除 Cache Storage 後帶時間戳參數重新載入，繞過所有 HTTP 快取
+  const forceUpdate = async () => {
+    try {
+      if (window.caches) {
+        const keys = await window.caches.keys();
+        await Promise.all(keys.map(k => window.caches.delete(k)));
+      }
+    } catch { /* 清快取失敗不影響重新載入 */ }
+    const url = new URL(window.location.href);
+    url.searchParams.set('v', String(Date.now()));
+    window.location.replace(url.toString());
+  };
+
+  // 手動檢查更新（設定頁按鈕用）
+  const checkForUpdate = async () => {
+    setCheckState('checking');
+    try {
+      const remote = await fetchRemoteVersion();
+      if (remote.commit && remote.commit !== GIT_COMMIT) {
+        setUpdateAvailable(true);
+        setCheckState('outdated');
+      } else {
+        setCheckState('latest');
+      }
+    } catch {
+      setCheckState('error');
+    }
+  };
+
+  // 自動版本檢查：App 開啟時與切回前景時都會檢查
   useEffect(() => {
+    // 強制更新後清掉網址上的 ?v= 時間戳參數，保持網址乾淨
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('v')) {
+      url.searchParams.delete('v');
+      window.history.replaceState(null, '', url.toString());
+    }
+
     if (import.meta.env.DEV) return; // 開發模式不檢查
     const check = async () => {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' });
-        if (!res.ok) return;
-        const remote = await res.json();
+        const remote = await fetchRemoteVersion();
         if (remote.commit && remote.commit !== GIT_COMMIT) setUpdateAvailable(true);
       } catch {
         // 離線或抓取失敗時靜默略過，不影響使用
@@ -440,14 +481,14 @@ const App = () => {
                 </div>
               </header>
 
-              {/* 新版本提示：偵測到線上已部署新版時顯示，點擊即重新載入 */}
+              {/* 新版本提示：偵測到線上已部署新版時顯示，點擊即強制更新 */}
               {updateAvailable && (
                 <button
-                  onClick={() => window.location.reload()}
+                  onClick={forceUpdate}
                   className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 active:bg-cyan-500/20 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
-                    <RefreshCw className="w-4 h-4 text-cyan-400" />
+                    <DownloadCloud className="w-4 h-4 text-cyan-400" />
                     <span className="text-[11px] text-cyan-200 font-bold">有新版本可用</span>
                   </div>
                   <span className="text-[10px] text-cyan-400 font-bold">點擊更新 →</span>
@@ -742,6 +783,62 @@ const App = () => {
                     </button>
                   ))}
                 </div>
+              </section>
+
+              {/* 版本與更新 */}
+              <section className="space-y-3">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <DownloadCloud className="w-3 h-3" /> 版本與更新
+                </label>
+                <div className="glass-card rounded-2xl divide-y divide-white/5 overflow-hidden">
+
+                  {/* 檢查更新 */}
+                  <button
+                    onClick={checkForUpdate}
+                    disabled={checkState === 'checking'}
+                    className="w-full p-4 flex items-center justify-between active:bg-white/5 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <RefreshCw className={cn("w-4 h-4 text-cyan-400", checkState === 'checking' && "animate-spin")} />
+                      <span className="text-xs font-bold text-white">檢查更新</span>
+                    </div>
+                    <span className={cn(
+                      "text-[10px] font-bold",
+                      checkState === 'latest' && "text-emerald-400",
+                      checkState === 'outdated' && "text-amber-400",
+                      checkState === 'error' && "text-red-400",
+                      (checkState === 'idle' || checkState === 'checking') && "text-slate-500"
+                    )}>
+                      {checkState === 'idle' && `目前 v${APP_VERSION}（${GIT_COMMIT}）`}
+                      {checkState === 'checking' && '檢查中...'}
+                      {checkState === 'latest' && '✓ 已是最新版本'}
+                      {checkState === 'outdated' && '發現新版本！'}
+                      {checkState === 'error' && '檢查失敗（網路？）'}
+                    </span>
+                  </button>
+
+                  {/* 強制更新：清除快取後重新下載整個 App */}
+                  <button
+                    onClick={forceUpdate}
+                    className="w-full p-4 flex items-center justify-between active:bg-white/5 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <DownloadCloud className="w-4 h-4 text-indigo-400" />
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-white">強制更新</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">清除快取並重新載入最新版本</div>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-slate-600" />
+                  </button>
+                </div>
+
+                {checkState === 'latest' && (
+                  <div className="tab-enter flex items-center gap-2 px-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-[10px] text-emerald-400/80">你使用的已經是最新版本</span>
+                  </div>
+                )}
               </section>
 
               {/* 免責聲明 */}
