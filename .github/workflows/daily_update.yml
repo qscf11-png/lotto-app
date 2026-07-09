@@ -5,6 +5,8 @@ on:
     # 每天台北時間早上 9:00 執行 (UTC+8 -> UTC 01:00)
     - cron: '0 1 * * *'
   workflow_dispatch: # 允許手動觸發
+  push:
+    branches: [master] # 程式碼推送到 master 時也自動建置部署
 
 permissions:
   contents: write
@@ -55,7 +57,7 @@ jobs:
           git push
 
       - name: Deploy to GitHub Pages
-        if: steps.check_changes.outputs.changes == 'true'
+        # 每次執行都部署：確保程式碼修改（非資料變動）也能上線
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
