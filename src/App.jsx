@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Brain, History, Calendar, Settings2, BarChart3, Sparkles, RefreshCw,
   Dna, Database, Activity, Search, PartyPopper, Zap, Minus, Plus, Info, ChevronRight,
@@ -82,6 +82,11 @@ const DATA_AGE_DAYS = (() => {
   return Math.floor((Date.now() - cutoff.getTime()) / 86400000);
 })();
 const IS_DATA_STALE = DATA_AGE_DAYS > 4;
+
+// ===== 版本資訊（由 vite.config.js 於建置期注入）=====
+const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev';
+const GIT_COMMIT = typeof __GIT_COMMIT__ !== 'undefined' ? __GIT_COMMIT__ : 'dev';
+const BUILD_TIME = typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : '-';
 
 // --- 動態計算頻率種子數據 ---
 function computeFrequency(draws, type, yearFilter) {
@@ -214,6 +219,27 @@ const App = () => {
   const [expertAnalysis, setExpertAnalysis] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisN, setAnalysisN] = useState(0); // 本次分析實際使用的期數
+  const [updateAvailable, setUpdateAvailable] = useState(false); // 偵測到線上有新版本
+
+  // 版本檢查：比對線上 version.json 的 commit 與目前執行中的版本，
+  // 不同代表有新版本已部署（App 開啟時與切回前景時都會檢查）
+  useEffect(() => {
+    if (import.meta.env.DEV) return; // 開發模式不檢查
+    const check = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}version.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const remote = await res.json();
+        if (remote.commit && remote.commit !== GIT_COMMIT) setUpdateAvailable(true);
+      } catch {
+        // 離線或抓取失敗時靜默略過，不影響使用
+      }
+    };
+    check();
+    const onVisible = () => { if (document.visibilityState === 'visible') check(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, []);
 
   // 目前資料範圍的「實際期數」— 貝氏後驗的試驗次數必須用真實樣本數，
   // 不能用硬編碼的假數字，否則後驗分佈的不確定性會被嚴重低估
@@ -400,7 +426,7 @@ const App = () => {
                     <h1 className="text-xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
                       LOTTO<span className="text-cyan-400 text-shadow-glow">AI</span>
                     </h1>
-                    <p className="text-[9px] text-cyan-500/60 font-mono tracking-[0.2em] uppercase">Bayesian Model</p>
+                    <p className="text-[9px] text-cyan-500/60 font-mono tracking-[0.2em] uppercase">Bayesian・v{APP_VERSION}</p>
                   </div>
                 </div>
                 <div className={cn(
@@ -413,6 +439,20 @@ const App = () => {
                   <span className={cn("text-[10px] font-mono", IS_DATA_STALE ? "text-amber-300" : "text-slate-300")}>{DATA_CUTOFF_DATE}</span>
                 </div>
               </header>
+
+              {/* 新版本提示：偵測到線上已部署新版時顯示，點擊即重新載入 */}
+              {updateAvailable && (
+                <button
+                  onClick={() => window.location.reload()}
+                  className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 active:bg-cyan-500/20 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <RefreshCw className="w-4 h-4 text-cyan-400" />
+                    <span className="text-[11px] text-cyan-200 font-bold">有新版本可用</span>
+                  </div>
+                  <span className="text-[10px] text-cyan-400 font-bold">點擊更新 →</span>
+                </button>
+              )}
 
               {/* 資料過期警告：無論本機忘了同步、或雲端自動更新故障都會在此顯示 */}
               {IS_DATA_STALE && (
@@ -710,6 +750,14 @@ const App = () => {
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   每期開獎皆為獨立隨機事件，歷史頻率不影響未來開獎機率。本工具僅供統計娛樂參考，請理性購彩。
                 </p>
+              </div>
+
+              {/* 版本資訊（iOS 慣例：設定頁底部）*/}
+              <div className="text-center space-y-0.5 pt-2 pb-1">
+                <p className="text-[10px] text-slate-600 font-mono">
+                  LOTTO AI v{APP_VERSION}（{GIT_COMMIT}）
+                </p>
+                <p className="text-[10px] text-slate-700 font-mono">建置於 {BUILD_TIME}</p>
               </div>
             </div>
           )}
