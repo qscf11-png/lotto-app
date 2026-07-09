@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import {
   Brain, History, Calendar, Settings2, BarChart3, Sparkles, RefreshCw,
-  Dna, Database, Activity, Search, PartyPopper, Zap, Minus, Plus, Info, ChevronRight
+  Dna, Database, Activity, Search, PartyPopper, Zap, Minus, Plus, Info, ChevronRight,
+  AlertTriangle
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -72,6 +73,15 @@ function getDataCutoff() {
 }
 
 const DATA_CUTOFF_DATE = getDataCutoff();
+
+// 資料時效檢查：大樂透（二、五）與威力彩（一、四）開獎最長間隔約 3 天，
+// 超過 4 天沒有新資料代表自動更新異常、或本機忘了 git pull
+const DATA_AGE_DAYS = (() => {
+  const cutoff = new Date(DATA_CUTOFF_DATE.replace(/\//g, '-'));
+  if (isNaN(cutoff.getTime())) return 0; // 日期解析失敗時不誤報
+  return Math.floor((Date.now() - cutoff.getTime()) / 86400000);
+})();
+const IS_DATA_STALE = DATA_AGE_DAYS > 4;
 
 // --- 動態計算頻率種子數據 ---
 function computeFrequency(draws, type, yearFilter) {
@@ -393,11 +403,27 @@ const App = () => {
                     <p className="text-[9px] text-cyan-500/60 font-mono tracking-[0.2em] uppercase">Bayesian Model</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/70 border border-white/10">
-                  <Calendar className="w-3 h-3 text-indigo-400" />
-                  <span className="text-[10px] font-mono text-slate-300">{DATA_CUTOFF_DATE}</span>
+                <div className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full border",
+                  IS_DATA_STALE
+                    ? "bg-amber-950/40 border-amber-500/40"
+                    : "bg-slate-900/70 border-white/10"
+                )}>
+                  <Calendar className={cn("w-3 h-3", IS_DATA_STALE ? "text-amber-400" : "text-indigo-400")} />
+                  <span className={cn("text-[10px] font-mono", IS_DATA_STALE ? "text-amber-300" : "text-slate-300")}>{DATA_CUTOFF_DATE}</span>
                 </div>
               </header>
+
+              {/* 資料過期警告：無論本機忘了同步、或雲端自動更新故障都會在此顯示 */}
+              {IS_DATA_STALE && (
+                <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                    開獎資料已 <span className="font-bold">{DATA_AGE_DAYS} 天</span>未更新（截止 {DATA_CUTOFF_DATE}）。
+                    本機版請執行「開始預測.bat」自動同步；若線上版看到此訊息，請檢查 GitHub Actions 執行狀態。
+                  </p>
+                </div>
+              )}
 
               {/* 遊戲切換（iOS Segmented Control 風格）*/}
               <div className="grid grid-cols-2 gap-1 p-1 bg-slate-900/70 rounded-2xl border border-white/5">
